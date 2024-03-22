@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- bean definitions here -->
+	<bean id="hikariDataSource"
+		class="com.zaxxer.hikari.HikariDataSource">
+		<constructor-arg>
+			<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"
+				p:jdbcUrl="jdbc:mysql://localhost:3306/propagation"
+				p:username="propagation" p:password="propagation"></bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="headerRepo" class="com.HAH.demo.repo.HeaderRepository">
+		<constructor-arg ref="hikariDataSource"></constructor-arg>
+	</bean>
+
+	<bean id="detailsRepo" class="com.HAH.demo.repo.DetailsRepository">
+		<constructor-arg ref="hikariDataSource"></constructor-arg>
+	</bean>
+
+	<bean id="propagationService"
+		class="com.HAH.demo.service.PropagationService"
+		p:headerRepository-ref="headerRepo"
+		p:detailsRepository-ref="detailsRepo"></bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<constructor-arg ref="hikariDataSource"></constructor-arg>
+	</bean>
+
+</beans>
