@@ -14,8 +14,12 @@
 		<aop:pointcut
 			expression="execution(* com.HAH.demo.service.PropagationService.save(..))"
 			id="serviceMethods" />
+		<aop:pointcut expression="within(com.HAH..repo.*)"
+			id="repoMethods" />
 		<aop:advisor id="saveMethodAdvisor" advice-ref="txAdvice"
 			pointcut-ref="serviceMethods" />
+		<aop:advisor id="repoMethodAdvisor"
+			advice-ref="repoMethodAvice" pointcut-ref="repoMethods" />
 	</aop:config>
 
 	<bean id="hikariDataSource"
@@ -49,6 +53,13 @@
 		transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="*save*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:advice id="repoMethodAvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="create" propagation="REQUIRES_NEW" />
 		</tx:attributes>
 	</tx:advice>
 
