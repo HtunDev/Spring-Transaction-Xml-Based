@@ -8,11 +8,11 @@ public class PropagationService {
 	private DetailsRepository detailsRepository;
 	private HeaderRepository headerRepository;
 
-	public PropagationService(HeaderRepository headerRepository) {
+	public void setHeaderRepository(HeaderRepository headerRepository) {
 		this.headerRepository = headerRepository;
 	}
 
-	public PropagationService(DetailsRepository detailsRepository) {
+	public void setDetailsRepository(DetailsRepository detailsRepository) {
 		this.detailsRepository = detailsRepository;
 	}
 

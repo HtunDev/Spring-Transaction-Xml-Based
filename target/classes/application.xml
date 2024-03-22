@@ -10,6 +10,14 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- bean definitions here -->
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* com.HAH.demo.service.PropagationService.save(..))"
+			id="serviceMethods" />
+		<aop:advisor id="saveMethodAdvisor" advice-ref="txAdvice"
+			pointcut-ref="serviceMethods" />
+	</aop:config>
+
 	<bean id="hikariDataSource"
 		class="com.zaxxer.hikari.HikariDataSource">
 		<constructor-arg>
@@ -36,5 +44,12 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<constructor-arg ref="hikariDataSource"></constructor-arg>
 	</bean>
+
+	<tx:advice id="txAdvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*save*" />
+		</tx:attributes>
+	</tx:advice>
 
 </beans>
